@@ -78,7 +78,7 @@ export default function RootLayout({
         {/* Adsterra Popunder Ad (ID: 30727122) */}
         <script async src="https://pl30827621.effectivecpmnetwork.com/c3/ef/81/c3ef814f619c0d00ce39cd5770fb6f38.js" />
       </head>
-      <body className="flex min-h-screen flex-col bg-[#0A0A0A] text-foreground font-sans antialiased pb-14 md:pb-0">
+      <body className="flex min-h-screen flex-col bg-[var(--dark-1)] text-foreground font-sans antialiased pb-14 md:pb-0">
         {/* Permanent Expandable Left Navigation Sidebar */}
         <LeftSidebar topics={GAMES} />
 

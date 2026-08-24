@@ -77,7 +77,7 @@ export default async function GuidesIndexPage({
   }
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white">
+    <div className="min-h-screen bg-[var(--dark-1)] text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       {guides.length > 0 && (
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListJsonLd) }} />
@@ -95,7 +95,7 @@ export default async function GuidesIndexPage({
               <Link
                 key={slug}
                 href={`/${topic}/posts/${slug}`}
-                className="group rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-5 shadow-lg transition-all hover:border-zinc-500"
+                className="group rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-2)] p-5 shadow-lg transition-all hover:border-zinc-500"
               >
                 <h2 className="font-heading text-base font-semibold text-zinc-200 group-hover:text-white transition-colors">
                   {guide!.frontmatter.title ?? slug.replace(/-/g, ' ')}

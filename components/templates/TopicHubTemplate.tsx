@@ -55,7 +55,7 @@ export default function TopicHubTemplate({
   const dbCategories = categories.filter((c) => c.slug !== 'posts').slice(0, 2)
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-zinc-800 selection:text-white">
+    <div className="min-h-screen bg-[var(--dark-1)] text-white selection:bg-zinc-800 selection:text-white">
       {/* Universal Sub-Header */}
       <TopicSubHeader topicId={topicId} topicName={topicName} activeCategory="overview" tabs={tabs} />
 

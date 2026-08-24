@@ -70,7 +70,7 @@ export default function AdsterraBanner({
   }, [idKey, width, height])
 
   return (
-    <div className={`my-4 flex max-w-full flex-col items-center justify-center overflow-hidden rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-2 shadow-md ${className}`}>
+    <div className={`my-4 flex max-w-full flex-col items-center justify-center overflow-hidden rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-2)] p-2 shadow-md ${className}`}>
       {label && (
         <span className="mb-1 text-[9px] font-mono font-bold tracking-widest text-zinc-600 uppercase">
           {label}

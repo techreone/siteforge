@@ -26,6 +26,28 @@ function walk(dir) {
   }
 }
 
+// ── theme.config.ts 个性化检查（警告模式：提示+参考案例，不阻塞）──
+const REF_EXAMPLE = `参考案例（how-to-fish 站海洋主题）:
+  brandName:    'How to Fish Guide'
+  brandTagline: 'Guides, boss strategies, fish locations and money tips for How to Fish'
+  colorBg:      '#0f172a'   // 海洋板岩蓝
+  colorSurface: '#162638'
+  accent:       '#38bdf8'   // 天蓝
+  accent2:      '#fbbf24'   // 沙滩金
+  radiusCard:   '1rem'
+完整文件: theme.config.ts ｜ 文档: PERSONALIZE.md`
+function checkTheme() {
+  const tp = path.join(ROOT, 'theme.config.ts')
+  if (!fs.existsSync(tp)) { console.log('⚠️  theme.config.ts 不存在（个性化入口缺失）'); return }
+  const t = fs.readFileSync(tp, 'utf8')
+  const unfilled = [...t.matchAll(/(\w+):\s*'(__[^']*)'/g)]
+  if (unfilled.length === 0) { console.log('✅ theme.config 个性化完成'); return }
+  console.log(`\n⚠️  个性化提示：theme.config.ts 有 ${unfilled.length} 个占位符未修改（不阻塞构建，但强烈建议个性化）:`)
+  for (const [, k, v] of unfilled) console.log(`   ${k} = ${v}`)
+  console.log('\n' + REF_EXAMPLE + '\n')
+}
+checkTheme()
+
 // 配置文件检查（无论是否已 build）
 const cfg = fs.readFileSync(path.join(ROOT, 'lib', 'site-config.ts'), 'utf8')
 for (const rx of patterns) {

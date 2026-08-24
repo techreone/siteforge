@@ -29,7 +29,7 @@ const topics = fs.existsSync(DATA_DIR)
 // ── 收集全部攻略的 lastUpdated（供首页/索引页 lastmod 使用，避免恒为"今天"）──
 const allPostDates = [] // { topic, date }
 for (const topic of topics) {
-  const postsDir = path.join(CONTENT_DIR, topic, 'guides')
+  const postsDir = path.join(CONTENT_DIR, topic, 'posts')
   if (!fs.existsSync(postsDir)) continue
   for (const f of fs.readdirSync(postsDir)) {
     if (!/.(md|mdx)$/.test(f)) continue
@@ -56,7 +56,7 @@ for (const slug of ['about', 'privacy', 'tos']) {
 
 for (const topic of topics) {
   if (topic.startsWith('_')) continue
-  const postsDir = path.join(CONTENT_DIR, topic, 'guides')
+  const postsDir = path.join(CONTENT_DIR, topic, 'posts')
   const hasGuides = fs.existsSync(postsDir)
   if (!hasGuides) continue // 只收录有 content 的游戏
 
@@ -107,14 +107,14 @@ llms.push('## Channels')
 llms.push('')
 for (const topic of topics) {
   if (topic.startsWith('_')) continue
-  const postsDir = path.join(CONTENT_DIR, topic, 'guides')
+  const postsDir = path.join(CONTENT_DIR, topic, 'posts')
   if (!fs.existsSync(postsDir)) continue
   llms.push(`### ${topic.replace(/-/g, ' ')}`)
   llms.push(`- [${topic} hub](${BASE}/${topic})`)
   llms.push(`- [${topic} guides index](${BASE}/${topic}/posts)`)
   const slugs = fs.readdirSync(postsDir)
-    .filter((f) => f.endsWith('.md'))
-    .map((f) => f.replace(/\.md$/, ''))
+    .filter((f) => f.endsWith('.md') || f.endsWith('.mdx'))
+    .map((f) => f.replace(/\.mdx?$/, ''))
     .sort()
   for (const slug of slugs) {
     llms.push(`  - [${slug.replace(/-/g, ' ')}](${BASE}/${topic}/posts/${slug})`)
@@ -122,7 +122,7 @@ for (const topic of topics) {
   llms.push('')
 }
 fs.writeFileSync(path.join(ROOT, 'public', 'llms.txt'), llms.join('\n'))
-console.log(`✅ llms.txt（${topics.filter((g) => !g.startsWith('_') && fs.existsSync(path.join(CONTENT_DIR, g, 'guides'))).length} 游戏）→ public/llms.txt`)
+console.log(`✅ llms.txt（${topics.filter((g) => !g.startsWith('_') && fs.existsSync(path.join(CONTENT_DIR, g, 'posts'))).length} 游戏）→ public/llms.txt`)
 
 // ── 写 feed.xml（RSS 2.0）──
 const siteName = (cfg.match(/SITE_NAME = '([^']+)'/) || [])[1] || BASE

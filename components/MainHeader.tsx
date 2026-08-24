@@ -95,7 +95,7 @@ export default function MainHeader({ topics = [] }: { topics?: HeaderGame[] }) {
                 <img
                   src={currentGame.img}
                   alt={currentGame.title}
-                  className="h-5 w-5 flex-shrink-0 rounded-none object-cover"
+                  className="h-5 w-5 flex-shrink-0 rounded-[var(--radius-item)] object-cover"
                 />
               )}
               <span className="font-sans font-semibold text-[15px] text-[#808191] group-hover:text-white transition-colors">
@@ -133,7 +133,7 @@ export default function MainHeader({ topics = [] }: { topics?: HeaderGame[] }) {
             </div>
 
             {(results.length > 0 || searching || searchError) && (
-              <div className="absolute top-full left-0 z-50 mt-2 w-full min-w-[280px] rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-2 shadow-2xl">
+              <div className="absolute top-full left-0 z-50 mt-2 w-full min-w-[280px] rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-2)] p-2 shadow-2xl">
                 {searching && <div className="px-3 py-2 text-xs text-zinc-500">Searching…</div>}
                 {!searching && searchError && (
                   <div className="px-3 py-2 text-xs text-zinc-500">
@@ -148,7 +148,7 @@ export default function MainHeader({ topics = [] }: { topics?: HeaderGame[] }) {
                     key={r.url || r.meta?.title || 'result'}
                     href={(r.url ?? '').replace(/\.html$/, '')}
                     onClick={() => setResults([])}
-                    className="block rounded-none px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white transition-colors"
+                    className="block rounded-[var(--radius-item)] px-3 py-2 text-sm text-zinc-300 hover:bg-zinc-900 hover:text-white transition-colors"
                   >
                     {r.meta?.title || r.url || '(untitled)'}
                   </Link>

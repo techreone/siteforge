@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
-    <title>PLACEHOLDER_SITE_NAME</title>
-    <link>https://template-test.local/</link>
-    <description>PLACEHOLDER_TAGLINE — 一句话说明这个站是做什么的、给谁看</description>
-
+    <title>demo-site.example_SITE_NAME</title>
+    <link>https://demo-site.example_DOMAIN.example/</link>
+    <description>demo-site.example_TAGLINE — 一句话说明这个站是做什么的、给谁看</description>
+    <item>
+      <title>posts</title>
+      <link>https://demo-site.example_DOMAIN.example/sample-topic/posts/sample-post-1</link>
+      <guid>https://demo-site.example_DOMAIN.example/sample-topic/posts/sample-post-1</guid>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>posts</title>
+      <link>https://demo-site.example_DOMAIN.example/sample-topic/posts/sample-post-2</link>
+      <guid>https://demo-site.example_DOMAIN.example/sample-topic/posts/sample-post-2</guid>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+    </item>
+    <item>
+      <title>posts</title>
+      <link>https://demo-site.example_DOMAIN.example/sample-topic/posts/sample-post-3</link>
+      <guid>https://demo-site.example_DOMAIN.example/sample-topic/posts/sample-post-3</guid>
+      <pubDate>Thu, 01 Jan 2026 00:00:00 GMT</pubDate>
+    </item>
   </channel>
 </rss>

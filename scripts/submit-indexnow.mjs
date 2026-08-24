@@ -35,12 +35,12 @@ if (fs.existsSync(contentDir)) {
     urls.push(`https://${host}/${topic}`)
     urls.push(`https://${host}/${topic}/posts`)
     
-    const guidesDir = path.join(contentDir, topic, 'guides')
+    const guidesDir = path.join(contentDir, topic, 'posts')
     if (fs.existsSync(guidesDir)) {
       const files = fs.readdirSync(guidesDir)
       for (const file of files) {
-        if (file.endsWith('.md')) {
-          const slug = file.replace(/\.md$/, '')
+        if (file.endsWith('.md') || file.endsWith('.mdx')) {
+          const slug = file.replace(/\.mdx?$/, '')
           urls.push(`https://${host}/${topic}/posts/${slug}`)
         }
       }

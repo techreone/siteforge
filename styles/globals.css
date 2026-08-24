@@ -46,6 +46,31 @@ html {
   --hover-transition: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* __THEME_TOKENS__ */
+:root {
+  --dark-1: __THEME_BG__;
+  --dark-2: __THEME_SURFACE__;
+  --dark-3: __THEME_SURFACE_ALT__;
+  --dark-4: __THEME_SURFACE_HOVER__;
+  --dark-5: __THEME_LINE__;
+  --dark-6: __THEME_LINE_ACTIVE__;
+  --grey-1: __THEME_TEXT_MUTED__;
+  --grey-2: __THEME_TEXT_SUBTLE__;
+  --grey-3: __THEME_TEXT_DIM__;
+  --accent-main: __THEME_ACCENT__;
+  --accent-hover: __THEME_ACCENT_HOVER__;
+  --accent-deep: __THEME_ACCENT_DEEP__;
+  --accent2-main: __THEME_ACCENT2__;
+  --accent2-soft: __THEME_ACCENT2_SOFT__;
+  --accent2-border: __THEME_ACCENT2_BORDER__;
+  --radius-card: __THEME_RADIUS_CARD__;
+  --radius-item: __THEME_RADIUS_ITEM__;
+  --brand-icon: __BRAND_ICON_PATH__;
+  --hero-image: __THEME_HERO_IMAGE__;
+}
+/* __/THEME_TOKENS__ */
+
+
 @layer base {
   :root {
     --background: 0 0% 0%;
@@ -882,7 +907,7 @@ html {
   word-break: break-word;
 }
 .guide-prose h2 {
-  @apply mt-10 mb-3 text-2xl font-bold tracking-tight text-white border-b border-[#1f1f23] pb-2 font-heading scroll-mt-24;
+  @apply mt-10 mb-3 text-2xl font-bold tracking-tight text-white border-b border-[var(--dark-5)] pb-2 font-heading scroll-mt-24;
 }
 .guide-prose h3 {
   @apply mt-8 mb-2 text-lg font-semibold text-white font-heading scroll-mt-24;
@@ -922,15 +947,15 @@ html {
   @apply bg-[#141417];
 }
 .guide-prose th {
-  @apply border border-[#1f1f23] px-3 py-2 text-left font-semibold text-white;
+  @apply border border-[var(--dark-5)] px-3 py-2 text-left font-semibold text-white;
 }
 .guide-prose td {
-  @apply border border-[#1f1f23] px-3 py-2 align-top leading-relaxed text-zinc-300;
+  @apply border border-[var(--dark-5)] px-3 py-2 align-top leading-relaxed text-zinc-300;
   overflow-wrap: break-word;
   word-break: break-word;
 }
 .guide-prose tbody tr:nth-child(even) {
-  @apply bg-[#0c0c0e];
+  @apply bg-[var(--dark-2)];
 }
 .guide-prose tbody tr:hover {
   @apply bg-[#141417];
@@ -938,14 +963,14 @@ html {
 .guide-prose .table-wrapper {
   @apply block overflow-x-auto;
 }
-  @apply my-4 rounded-none border-l-4 border-[#e2b93f] bg-[#0c0c0e] px-4 py-3 text-zinc-400;
+  @apply my-4 rounded-none border-l-4 border-[#e2b93f] bg-[var(--dark-2)] px-4 py-3 text-zinc-400;
 }
 .guide-prose code {
   @apply rounded-none bg-[#141417] px-1.5 py-0.5 text-xs font-mono text-[#d3ad69];
   overflow-wrap: anywhere;
 }
 .guide-prose pre {
-  @apply my-4 overflow-x-auto rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-4 text-xs font-mono;
+  @apply my-4 overflow-x-auto rounded-none border border-[var(--dark-5)] bg-[var(--dark-2)] p-4 text-xs font-mono;
 }
 .guide-prose pre code {
   @apply bg-transparent p-0 text-zinc-300;
@@ -954,23 +979,23 @@ html {
   @apply my-4 w-full border-collapse text-sm;
 }
 .guide-prose th {
-  @apply border border-[#1f1f23] bg-[#121215] px-3 py-2 text-left font-semibold text-white;
+  @apply border border-[var(--dark-5)] bg-[var(--dark-3)] px-3 py-2 text-left font-semibold text-white;
 }
 .guide-prose td {
-  @apply border border-[#1f1f23] px-3 py-2 align-top;
+  @apply border border-[var(--dark-5)] px-3 py-2 align-top;
 }
 .guide-prose img {
-  @apply my-4 h-auto max-w-full rounded-none border border-[#1f1f23];
+  @apply my-4 h-auto max-w-full rounded-none border border-[var(--dark-5)];
 }
 .guide-prose hr {
-  @apply my-6 border-[#1f1f23];
+  @apply my-6 border-[var(--dark-5)];
 }
 
 /* ── MDX 视觉组件 ── */
 
 /* Callout 醒目提示框（:::tip / :::warning / :::critical / :::note） */
 .guide-prose .callout {
-  @apply relative my-5 rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-4 shadow-lg;
+  @apply relative my-5 rounded-none border border-[var(--dark-5)] bg-[var(--dark-2)] p-4 shadow-lg;
 }
 .guide-prose .callout-title {
   @apply mb-2 text-xs font-bold uppercase tracking-wider font-heading;
@@ -998,7 +1023,7 @@ html {
 
 /* Figure 图片：单行大图 / 文本环绕 */
 .guide-prose .figure-block {
-  @apply my-6 border border-[#1f1f23] bg-[#0c0c0e] p-2 text-center;
+  @apply my-6 border border-[var(--dark-5)] bg-[var(--dark-2)] p-2 text-center;
 }
 .guide-prose .figure-block img {
   @apply w-full h-auto;
@@ -1007,7 +1032,7 @@ html {
   @apply mt-2 text-center text-xs font-mono text-zinc-400;
 }
 .guide-prose .figure-wrap {
-  @apply my-3 border border-[#1f1f23] bg-[#0c0c0e] p-2 max-w-[45%];
+  @apply my-3 border border-[var(--dark-5)] bg-[var(--dark-2)] p-2 max-w-[45%];
 }
 .guide-prose .figure-wrap img {
   @apply w-full h-auto;

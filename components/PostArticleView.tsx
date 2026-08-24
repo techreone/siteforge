@@ -368,7 +368,7 @@ export default function PostArticleView({
   const howToJsonLd = howTo ? makeHowToJsonLd(howTo, title || mainKeyword || topicName) : null
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white selection:bg-zinc-800 selection:text-white">
+    <div className="min-h-screen bg-[var(--dark-1)] text-white selection:bg-zinc-800 selection:text-white">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       {faqJsonLd && (
@@ -401,7 +401,7 @@ export default function PostArticleView({
             {/* 移动端：TOC 折叠按钮 */}
             <button
               onClick={() => setTocOpen(!tocOpen)}
-              className="mb-4 flex w-full items-center justify-between rounded-none border border-[#1f1f23] bg-[#0c0c0e] px-4 py-3 text-xs font-mono uppercase tracking-wider text-zinc-400 lg:hidden"
+              className="mb-4 flex w-full items-center justify-between rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-2)] px-4 py-3 text-xs font-mono uppercase tracking-wider text-zinc-400 lg:hidden"
             >
               <span className="flex items-center gap-2">
                 <List className="w-4 h-4" /> Table of Contents
@@ -410,8 +410,8 @@ export default function PostArticleView({
             </button>
 
             {/* TOC CARD（锐角方形，sticky 居中跟随滚动） */}
-            <div className={`flex flex-col rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-5 shadow-lg lg:flex-1 lg:min-h-0 ${tocOpen ? 'flex' : 'hidden lg:flex'}`}>
-              <div className="shrink-0 text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-bold border-b border-[#1f1f23] pb-2 font-heading">
+            <div className={`flex flex-col rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-2)] p-5 shadow-lg lg:flex-1 lg:min-h-0 ${tocOpen ? 'flex' : 'hidden lg:flex'}`}>
+              <div className="shrink-0 text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-bold border-b border-[var(--dark-5)] pb-2 font-heading">
                 TABLE OF CONTENTS
               </div>
 
@@ -433,7 +433,7 @@ export default function PostArticleView({
                         href={`#${item.id}`}
                         data-toc-id={item.id}
                         onClick={(e) => handleTocClick(e, item.id)}
-                        className={`block rounded-none py-1.5 pr-2 transition-all leading-snug border-l-2 border-transparent text-zinc-400 hover:text-white hover:bg-zinc-900/60 ${levelClass}`}
+                        className={`block rounded-[var(--radius-item)] py-1.5 pr-2 transition-all leading-snug border-l-2 border-transparent text-zinc-400 hover:text-white hover:bg-zinc-900/60 ${levelClass}`}
                       >
                         <span className="flex items-center gap-1.5">
                           {item.level === 3 && (
@@ -482,11 +482,11 @@ export default function PostArticleView({
             </div>
 
             {/* Get Link Button */}
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[#1f1f23] pb-4 text-xs">
+            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[var(--dark-5)] pb-4 text-xs">
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleCopy}
-                  className="flex items-center gap-1.5 rounded-none border border-[#1f1f23] bg-[#121215] px-3 py-1.5 text-xs text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors"
+                  className="flex items-center gap-1.5 rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-3)] px-3 py-1.5 text-xs text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors"
                 >
                   {isCopied ? <Check className="w-3.5 h-3.5" /> : <Link2 className="w-3.5 h-3.5" />}
                   <span>{isCopied ? 'Copied!' : 'Get Link'}</span>
@@ -505,7 +505,7 @@ export default function PostArticleView({
 
             {/* Similar Guides 卡片（Canva 模式：同游戏环形互链，正文底部内链密度提升） */}
             {related.length > 6 && (
-              <section aria-label="More posts" className="border-t border-[#1f1f23] pt-6">
+              <section aria-label="More posts" className="border-t border-[var(--dark-5)] pt-6">
                 <h2 className="font-heading text-base font-semibold text-white">
                   More {topicName} Guides
                 </h2>
@@ -514,7 +514,7 @@ export default function PostArticleView({
                     <Link
                       key={post.slug}
                       href={post.href}
-                      className="group rounded-lg border border-[#1f1f23] bg-[#0c0c0e] p-4 transition-colors hover:border-zinc-600"
+                      className="group rounded-lg border border-[var(--dark-5)] bg-[var(--dark-2)] p-4 transition-colors hover:border-zinc-600"
                     >
                       <div className="text-sm font-medium text-zinc-200 group-hover:text-white transition-colors">
                         {post.title}
@@ -536,8 +536,8 @@ export default function PostArticleView({
              ========================================================================= */}
           <aside className="lg:col-span-3 space-y-5 lg:self-start lg:sticky lg:top-24 lg:max-h-[80vh] lg:overflow-y-auto">
             {/* RELATED POSTS CARD（始终渲染，空时占位——后续有攻略可链） */}
-            <div className="rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-5 space-y-4 shadow-lg">
-              <div className="shrink-0 text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-bold border-b border-[#1f1f23] pb-2 font-heading">
+            <div className="rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-2)] p-5 space-y-4 shadow-lg">
+              <div className="shrink-0 text-[11px] font-mono uppercase tracking-wider text-zinc-400 font-bold border-b border-[var(--dark-5)] pb-2 font-heading">
                 RELATED POSTS
               </div>
 
@@ -547,7 +547,7 @@ export default function PostArticleView({
                     <Link
                       key={post.slug}
                       href={post.href}
-                      className="group flex items-center gap-3 rounded-none border border-[#1f1f23] bg-[#121215] p-2 transition-all hover:border-zinc-500"
+                      className="group flex items-center gap-3 rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-3)] p-2 transition-all hover:border-zinc-500"
                     >
                       <span className="text-xs font-medium text-zinc-300 group-hover:text-white transition-colors line-clamp-2 leading-tight">
                         {post.title}

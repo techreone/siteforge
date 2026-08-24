@@ -9,12 +9,13 @@
     "start": "next start",
     "preview": "next build && node scripts/serve-static.mjs",
     "dev:clean": "rm -rf .next && next dev",
-    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/check-frontmatter.mjs",
+    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/check-frontmatter.mjs && node scripts/sync-theme.mjs",
     "check:seo": "python3 scripts/check-seo-fixes.py",
     "check:audit": "python3 scripts/check-seo-audit.py",
     "check:audit:strict": "python3 scripts/check-seo-audit.py --strict",
     "check:placeholders": "node scripts/check-placeholders.mjs",
-    "og": "node scripts/generate-og-images.mjs"
+    "og": "node scripts/generate-og-images.mjs",
+    "sync:theme": "node scripts/sync-theme.mjs"
   },
   "dependencies": {
     "autoprefixer": "^10.5.4",
@@ -41,5 +42,5 @@
     "satori": "^0.26.0",
     "typescript": "^5.7.0"
   },
-  "description": "SiteForge \u2014 \u901a\u7528\u5185\u5bb9\u7ad9/\u5de5\u5177\u7ad9\u524d\u7aef\u6846\u67b6\uff08Next.js SSG + MDX + Pagefind + \u96c6\u4e2d\u5f0f JSON-LD\uff09\uff0c\u6e90\u81ea RogueWiki"
+  "description": "SiteForge — 通用内容站/工具站前端框架（Next.js SSG + MDX + Pagefind + 集中式 JSON-LD），源自 RogueWiki"
 }

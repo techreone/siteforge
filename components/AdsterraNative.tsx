@@ -38,9 +38,9 @@ export default function AdsterraNative({
   }, [])
 
   return (
-    <div className={`my-6 rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-4 shadow-md ${className}`}>
+    <div className={`my-6 rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-2)] p-4 shadow-md ${className}`}>
       {label && (
-        <div className="mb-3 border-b border-[#1f1f23] pb-2 text-[10px] font-mono font-bold tracking-wider text-zinc-500 uppercase">
+        <div className="mb-3 border-b border-[var(--dark-5)] pb-2 text-[10px] font-mono font-bold tracking-wider text-zinc-500 uppercase">
           {label}
         </div>
       )}
