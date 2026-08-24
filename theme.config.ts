@@ -1,6 +1,7 @@
 // ── 个性化主题配置（唯一改这里）────────────────────────────
 // ⚠️ 本文件是新站个性化的入口。出厂值全是 __PLACEHOLDER__ 标记，
-//    不修改直接 build 会被 check-placeholders 拦下（lint 报错+修改指引）。
+//    不修改不会阻塞 build，但 check-placeholders 会持续 ⚠️ 提示并给出参考案例
+//    （用户指令 2026-08-24：提示不拦截；原话存档于 PERSONALIZE.md）。
 //
 // 使用：把每个 '__...__' 占位值替换成你站点的真实值，然后跑：
 //    npm run sync:theme   （把 token 注入 styles/globals.css）

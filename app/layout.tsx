@@ -80,7 +80,7 @@ export default function RootLayout({
       </head>
       <body className="flex min-h-screen flex-col bg-[var(--dark-1)] text-foreground font-sans antialiased pb-14 md:pb-0">
         {/* Permanent Expandable Left Navigation Sidebar */}
-        <LeftSidebar topics={GAMES} />
+        <LeftSidebar groups={[]} />
 
         {/* Main Content Wrapper (Adjacent to Left Sidebar) */}
         <div className="main-content-wrapper">

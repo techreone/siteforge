@@ -48,22 +48,35 @@ function checkTheme() {
 }
 checkTheme()
 
-// 配置文件检查（无论是否已 build）
+// ── 门禁分层 ──
+// 硬门禁（exit 1）：仅当 out/ 存在（站点已构建、具备上线意图）时扫产物残留
+// 软提示（exit 0）：出厂配置占位 / theme.config 未个性化 → ⚠️ 警告 + 参考案例
+// 依据用户指令（2026-08-24 原话见 PERSONALIZE.md「门禁分层」节）
+const hasBuild = fs.existsSync(OUT)
+
+// 配置检查：出厂占位 = 软提示（母模板出厂态必须可通过）；产物残留 = 硬门禁
 const cfg = fs.readFileSync(path.join(ROOT, 'lib', 'site-config.ts'), 'utf8')
+const configWarn = []
 for (const rx of patterns) {
   const m = cfg.match(rx)
-  if (m) hits.push(`lib/site-config.ts → ${m[0]}`)
+  if (m) configWarn.push(`lib/site-config.ts → ${m[0]}（出厂占位，建站时替换）`)
 }
 if (/PLACEHOLDER/i.test(fs.readFileSync(path.join(ROOT, 'scripts', 'indexnow-key.txt'), 'utf8'))) {
-  hits.push('scripts/indexnow-key.txt → PLACEHOLDER key')
+  configWarn.push('scripts/indexnow-key.txt → PLACEHOLDER key（建站时生成）')
 }
 
-if (fs.existsSync(OUT)) walk(OUT)
-else console.log('⚠️ out/ 不存在（先 npm run build 再跑本检查）——本次仅检查了配置文件')
-
-if (hits.length) {
-  console.error(`\n❌ 发现 ${hits.length} 处占位符残留，禁止上线：\n` + hits.slice(0, 40).map((h) => '  - ' + h).join('\n'))
-  process.exit(1)
+if (hasBuild) {
+  walk(OUT)
+  if (hits.length) {
+    console.error(`\n❌ 发现 ${hits.length} 处占位符残留，禁止上线：\n` + hits.slice(0, 40).map((h) => '  - ' + h).join('\n'))
+    process.exit(1)
+  }
+  console.log('✅ 产物占位符扫描通过（硬门禁）')
 } else {
-  console.log('✅ 占位符扫描通过：无残留')
+  console.log('ℹ️  out/ 不存在（母模板出厂态）——跳过产物硬扫，仅提示配置个性化')
 }
+if (configWarn.length) {
+  console.log('\n⚠️  配置个性化提示（不阻塞）:')
+  console.log(configWarn.map((h) => '  - ' + h).join('\n'))
+}
+if (!hasBuild && !configWarn.length) console.log('✅ 占位符扫描全部通过')

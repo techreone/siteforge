@@ -33,7 +33,19 @@
 | PostArticleView | TOC 卡/标签/相关文章卡配色圆角 | ✅ 经变量回写 |
 | TopicSubHeader | 面包屑配色 | ✅ 经变量回写 |
 | templates/* | 卡片配色 | ✅ 经变量回写 |
-| LeftSidebar | 类名演进 guide-nav-row→game-nav-row、去硬编码图标 | ✅ 回写结构 |
+| LeftSidebar | groups 数据驱动导航、game-nav-row/game-icon-item 类名、去硬编码图标、rounded-full 缩略图 | ✅ 已回写（结构泛化：href 由数据提供，品牌图走 site-config） |
 | components/icons/ | 主题图标库（FishingIcons.tsx） | 📁 约定回写：icons/ 目录留给各站自建 |
 | app/page.tsx | 首页 hero/卡片布局翻新 | 🔒 站点特定，不回写（各站自定） |
 | 图片 30 张 | 站点配图 | 🔒 站点特定 |
+
+## 门禁分层（2026-08-24 用户指令存档）
+
+用户原话：「lint不建议拦截，但是要提示，并且给出参考的案例。（skill同样要有案例）」
+
+据此 check-placeholders 实现两层：
+- **硬门禁（exit 1）**：仅扫 `out/` 构建产物中的 `PLACEHOLDER_ / roguewiki / example.com` 残留——
+  即"已构建、具备上线意图但站点仍是占位符"才拦截
+- **软提示（exit 0）**：母模板出厂配置（site-config / indexnow-key / theme.config 未填）→
+  ⚠️ 警告 + how-to-fish 参考案例，不阻塞母模板自身开发
+
+双模式验证：出厂态 EXIT=0；含残留产物的未个性化场景 EXIT=1。

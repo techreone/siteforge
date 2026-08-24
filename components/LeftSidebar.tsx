@@ -2,17 +2,21 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { SITE_NAME } from '../lib/site-config'
+import { SITE_NAME, SITE_LOGO_ICON as BRAND_ICON, SITE_LOGO_TEXT as BRAND_LOGO_TEXT } from '../lib/site-config'
 
-
-// 游戏列表由 layout 传入（data/ 目录驱动），无则空
-interface SidebarGame {
-  id: string
+export interface SidebarNavItem {
+  slug: string
   title: string
   img: string
+  href: string
+}
+export interface SidebarNavGroup {
+  label: string
+  items: SidebarNavItem[]
 }
 
-export default function LeftSidebar({ topics = [] }: { topics?: SidebarGame[] }) {
+// 单游戏攻略导航：折叠=分组图标，展开=缩略图+标题
+export default function LeftSidebar({ groups = [] }: { groups?: SidebarNavGroup[] }) {
   const [isExpanded, setIsExpanded] = useState(false)
 
   const toggleExpand = () => {
@@ -31,17 +35,17 @@ export default function LeftSidebar({ topics = [] }: { topics?: SidebarGame[] })
     <aside className={`left-sidebar ${isExpanded ? 'is-expanded' : ''}`}>
       {/* Brand shield logo */}
       <div className="brand-logo-container">
-        <Link href="/" className="flex items-center group" title="{SITE_NAME} Home">
+        <Link href="/" className="flex items-center group" title={SITE_NAME}>
           <span className="sr-only">{SITE_NAME} Home</span>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/site/icon-256.webp"
+            src={BRAND_ICON}
             alt={SITE_NAME + " Logo"}
             className="w-9 h-9 object-contain flex-shrink-0 transition-transform group-hover:scale-105"
           />
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/images/site/logo-text.webp"
+            src={BRAND_LOGO_TEXT}
             alt={SITE_NAME + " Logo"}
             className="ml-3 h-5 w-auto object-contain sidebar-label opacity-90 group-hover:opacity-100 transition-opacity"
           />
@@ -63,54 +67,44 @@ export default function LeftSidebar({ topics = [] }: { topics?: SidebarGame[] })
         </svg>
       </button>
 
-      {/* Topic Icon Shortcuts */}
-      <ul className="topic-nav-list">
-        <li key="home" className="w-full">
-          <Link
-            href="/"
-            className="topic-nav-row group"
-            title="All Games Hub"
-          >
-            <div
-              className="topic-icon-item flex-shrink-0 border-zinc-700 bg-zinc-900"
-            >
-              <svg viewBox="0 0 24 24" className="w-5 h-5 text-white fill-current"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-            </div>
-            <span className="font-sans text-sm font-medium text-white sidebar-label truncate">
-              All Games Hub
-            </span>
-          </Link>
-        </li>
-        {topics.map((topic) => (
-          <li key={topic.id} className="w-full">
-            <Link
-              href={`/${topic.id}`}
-              className="topic-nav-row group"
-              title={topic.title}
-            >
-              <div className="topic-icon-item flex-shrink-0">
-                {topic.img ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={topic.img}
-                    alt={topic.title}
-                    loading="lazy"
-                    decoding="async"
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                ) : (
-                  <span className="flex h-full w-full items-center justify-center bg-zinc-900 text-[11px] font-bold text-zinc-600">
-                    {topic.title.charAt(0)}
-                  </span>
-                )}
-              </div>
-              <span className="font-sans text-sm font-semibold text-[#808191] group-hover:text-white transition-colors sidebar-label truncate">
-                {topic.title}
-              </span>
-            </Link>
-          </li>
+      {/* 攻略分组导航 */}
+      <nav className="guide-nav flex-1 overflow-y-auto py-2 w-full" aria-label="Guides navigation">
+        {groups.map((group) => (
+          <div key={group.label} className="guide-nav-group mb-2">
+            <ul>
+              {group.items.map((item) => (
+                <li key={item.slug} className="w-full">
+                  <Link
+                    href={item.href}
+                    className="game-nav-row group"
+                    title={item.title}
+                  >
+                    <div className="game-icon-item flex-shrink-0">
+                      {item.img ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={item.img}
+                          alt={item.title}
+                          loading="lazy"
+                          decoding="async"
+                          className="w-full h-full object-cover rounded-full"
+                        />
+                      ) : (
+                        <span className="flex h-full w-full items-center justify-center bg-zinc-900 text-[11px] font-bold text-zinc-600">
+                          {item.title.charAt(0)}
+                        </span>
+                      )}
+                    </div>
+                    <span className="font-sans text-[13px] font-medium text-[#808191] group-hover:text-white transition-colors sidebar-label leading-snug line-clamp-2 flex-1 min-w-0">
+                      {item.title}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
-      </ul>
+      </nav>
     </aside>
   )
 }
