@@ -1,0 +1,45 @@
+{
+  "name": "siteforge",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "postbuild": "pagefind --site out --output-path out/_pagefind && node scripts/submit-indexnow.mjs",
+    "start": "next start",
+    "preview": "next build && node scripts/serve-static.mjs",
+    "dev:clean": "rm -rf .next && next dev",
+    "prebuild": "node scripts/generate-sitemap.mjs && node scripts/check-frontmatter.mjs",
+    "check:seo": "python3 scripts/check-seo-fixes.py",
+    "check:audit": "python3 scripts/check-seo-audit.py",
+    "check:audit:strict": "python3 scripts/check-seo-audit.py --strict",
+    "check:placeholders": "node scripts/check-placeholders.mjs",
+    "og": "node scripts/generate-og-images.mjs"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.5.4",
+    "gray-matter": "^4.0.3",
+    "lucide-react": "^1.30.0",
+    "next": "^15.5.22",
+    "playwright-core": "^1.62.1",
+    "postcss": "^8.5.26",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "rehype-stringify": "^10.0.1",
+    "remark": "^15.0.1",
+    "remark-gfm": "^4.0.1",
+    "remark-rehype": "^11.1.2",
+    "sharp": "^0.35.3",
+    "tailwindcss": "^3.4.19",
+    "unist-util-visit": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "pagefind": "^1.5.2",
+    "satori": "^0.26.0",
+    "typescript": "^5.7.0"
+  },
+  "description": "SiteForge \u2014 \u901a\u7528\u5185\u5bb9\u7ad9/\u5de5\u5177\u7ad9\u524d\u7aef\u6846\u67b6\uff08Next.js SSG + MDX + Pagefind + \u96c6\u4e2d\u5f0f JSON-LD\uff09\uff0c\u6e90\u81ea RogueWiki"
+}

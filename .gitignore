@@ -1,0 +1,19 @@
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+.pi-subagents/
+.DS_Store
+*.log
+.pi-glla/
+.pi/
+
+# Python
+__pycache__/
+*.pyc
+
+# 构建/临时产物(不入库)
+_tmp/
+public/sitemap.xml
+public/llms.txt

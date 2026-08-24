@@ -1,0 +1,14 @@
+{
+  "slug": "sample-topic",
+  "name": "Sample Topic",
+  "description": "A sample channel demonstrating the data contract. Delete this folder before launch.",
+  "about": "Placeholder content showing how a channel hub works: catalog.json defines hub metadata, categories and banner; theme.config.ts (optional) customizes accent colors; content/sample-topic/posts holds the articles.",
+  "categories": [
+    {
+      "slug": "posts",
+      "name": "Posts",
+      "description": "Long-form articles for this channel"
+    }
+  ],
+  "icon": "/images/site/icon-256.webp"
+}

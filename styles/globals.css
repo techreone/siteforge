@@ -1,0 +1,1099 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* ── 全站默认缩放 115%（html zoom）──
+   zoom 整体等比缩放（文字/px 布局/图片全放大），font-size 方案只放大 rem 会比例失真。
+   TOC scrollspy 已改用布局坐标（offsetTop 链 + scrollTo 计算，见 GuideArticleView），
+   不依赖 zoom 下的 rect/scrollY 视口坐标，因此 zoom 与 scrollspy 可共存。 */
+html {
+  zoom: 1.15;
+}
+/* 移动小屏（<768px）：禁用 zoom 放大，防水平溢出
+   （2026-08-13 实测：360px 视口下 zoom1.15 把整页视觉放大到 368px，溢出 29px 可横向滚动） */
+@media (max-width: 768px) {
+  html {
+    zoom: 1;
+  }
+}
+
+
+/* ── RogueWiki 100% Pure Dark Monochrome Design System ── */
+:root {
+  --dark-1: #000000;       /* Pitch Black background */
+  --dark-2: #09090b;       /* Surface cards background */
+  --dark-3: #121212;       /* Secondary card surface */
+  --dark-4: #18181b;       /* Button & hover surface */
+  --dark-5: #27272a;       /* 1px border lines */
+  --dark-6: #3f3f46;       /* Active / hover border lines */
+
+  --grey-1: #a1a1aa;       /* Muted text / descriptions */
+  --grey-2: #71717a;       /* Secondary icons / metadata */
+  --grey-3: #52525b;       /* Dim borders / subtle text */
+  --white-1: #ffffff;
+  --white-2: #f4f4f5;
+
+  /* Pure Dark Monochrome Accent System (Zero Color Bias) */
+  --gold-main: #ffffff;
+  --gold-hover: #e4e4e7;
+  --gold-dark: #a1a1aa;
+  --gold-light: rgba(255, 255, 255, 0.06);
+  --gold-border: rgba(255, 255, 255, 0.15);
+
+  --accent-main: #ffffff;
+  --accent-hover: #e4e4e7;
+  --red-live: #ffffff;
+
+  --hover-transition: 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 63%;
+    --border: 0 0% 15%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 4%;
+    --card-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 9%;
+    --muted-foreground: 0 0% 63%;
+    --border: 0 0% 15%;
+  }
+
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 115%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--dark-1);
+    color: var(--white-1);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Geist Sans", "Segoe UI", Roboto, sans-serif;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .font-heading {
+    font-family: var(--font-oswald), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.01em;
+  }
+
+  .font-oswald {
+    font-family: var(--font-oswald), sans-serif;
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+:root {
+  --sidebar-width: 96px;
+}
+
+:root.sidebar-expanded {
+  --sidebar-width: 240px;
+}
+
+/* ==========================================================================
+   1. 可展开左侧导航栏 (96px <-> 240px)
+   ========================================================================== */
+.left-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: var(--sidebar-width);
+  background-color: var(--dark-1);
+  border-right: 1px solid var(--dark-4);
+  z-index: 110;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 12px;
+  gap: 16px;
+  transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow-x: hidden;
+  will-change: width;
+}
+
+.brand-logo-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 16px;
+  height: 44px;
+  flex-shrink: 0;
+}
+
+/* Collapse/Expand button */
+.collapse-btn {
+  height: 32px;
+  width: 32px;
+  margin-left: 20px;
+  background: var(--dark-1);
+  border: 1px solid var(--dark-5);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white-1);
+  cursor: pointer;
+  transition: var(--hover-transition);
+  flex-shrink: 0;
+}
+
+.collapse-btn:hover {
+  border-color: var(--grey-3);
+  background-color: var(--dark-5);
+}
+
+/* Sidebar label fade and slide animation */
+.sidebar-label {
+  opacity: 0;
+  max-width: 0;
+  transform: translateX(-8px);
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.25s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.left-sidebar.is-expanded .sidebar-label {
+  opacity: 1;
+  max-width: 160px;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.game-nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  list-style: none;
+  width: 100%;
+  align-items: flex-start;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.game-nav-list::-webkit-scrollbar { display: none; }
+
+.game-icon-item {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--dark-1);
+  border: 1px solid var(--dark-5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+
+.group:hover .game-icon-item,
+.game-icon-item:hover {
+  border-color: #ffffff;
+  opacity: 1;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.game-icon-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.game-nav-row,
+.game-nav-row:hover,
+.game-nav-row:focus,
+.game-nav-row:active {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  outline: none !important;
+  border: none !important;
+}
+
+.nav-link-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--grey-1);
+  cursor: pointer;
+  transition: var(--hover-transition);
+}
+.nav-link-btn:hover {
+  background-color: var(--dark-5);
+  color: var(--white-1);
+}
+
+/* ==========================================================================
+   2. 主内容区域包裹层（跟随侧边栏伸缩）
+   ========================================================================== */
+.main-content-wrapper {
+  margin-left: var(--sidebar-width);
+  width: calc(100% - var(--sidebar-width));
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  transition: margin-left 0.3s cubic-bezier(0.16, 1, 0.3, 1), width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: margin-left, width;
+}
+
+/* ==========================================================================
+   3. 顶部主导航栏 (72px)
+   ========================================================================== */
+.main-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 72px;
+  background-color: var(--dark-1);
+  border-bottom: 1px solid var(--dark-4);
+  z-index: 105;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+}
+
+.main-header-inner {
+  width: 100%;
+  max-width: 1360px;
+  padding: 0 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.browse-games {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--grey-2);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: var(--hover-transition);
+}
+.browse-games:hover { color: var(--white-1); }
+
+.v-divider {
+  width: 1px;
+  height: 24px;
+  background-color: var(--dark-5);
+}
+
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--grey-2);
+  width: 260px;
+  min-width: 0;
+  flex: 0 1 260px;
+  background-color: rgba(255, 255, 255, 0.04);
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--dark-5);
+  transition: var(--hover-transition);
+}
+.search-box:focus-within {
+  border-color: var(--accent-main);
+  background-color: rgba(255, 255, 255, 0.07);
+}
+.search-box input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--white-1);
+  font-size: 14px;
+  width: 100%;
+}
+.search-box input::placeholder { color: var(--grey-2); }
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--grey-2);
+  font-size: 14px;
+  font-weight: 600;
+}
+.header-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: var(--hover-transition);
+}
+.header-action:hover { color: var(--white-1); }
+
+/* Responsive layout adjustments for small screens */
+@media (max-width: 768px) {
+  .left-sidebar { display: none; }
+  .main-content-wrapper { margin-left: 0; width: 100%; }
+  .main-header-inner { padding: 0 16px; }
+  .header-left { flex: 1; min-width: 0; gap: 10px; }
+  .search-box { flex: 1 1 auto; width: auto; max-width: none; min-width: 44px; }
+  .browse-games { gap: 6px; font-size: 13px; }
+  .page-container { padding: 0 16px 40px 16px; }
+}
+
+/* ==========================================================================
+   4. 主页面容器（在侧栏右侧内容区水平居中）
+   ========================================================================== */
+.page-container {
+  width: 100%;
+  max-width: 1360px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 32px 60px 32px;
+}
+
+/* 顶部 Welcome Banner (全宽背景 + 梯度渐隐) */
+.welcome-hero {
+  position: relative;
+  width: 100%;
+  background: 
+    linear-gradient(180deg, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0.85) 70%, #000000 100%),
+    linear-gradient(90deg, #000000 0%, rgba(0, 0, 0, 0.2) 15%, rgba(0, 0, 0, 0.2) 85%, #000000 100%),
+    url('/images/home-hero.jpg');
+  background-size: cover;
+  background-position: center 30%;
+  border-bottom: 1px solid var(--dark-5);
+  margin-bottom: 20px;
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.9);
+}
+
+.welcome-hero-inner {
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 44px 32px 40px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.welcome-hero h1 {
+  font-size: 32px;
+  font-weight: 400;
+  color: var(--white-2);
+}
+.welcome-hero h1 strong {
+  font-weight: 700;
+  color: var(--accent-main);
+}
+
+.sponsor-brands {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.sponsor-logo {
+  color: var(--white-1);
+  font-family: var(--font-oswald), sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  font-weight: 700;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* League Ongoing 倒计时条 */
+.league-banner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 12px;
+  margin-bottom: 32px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.6) 25%, rgba(0,0,0,0.85) 50%, rgba(0,0,0,0.6) 75%, transparent 100%);
+  border-top: 1px solid var(--dark-5);
+  border-bottom: 1px solid var(--dark-5);
+}
+
+.league-title {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--grey-1);
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.league-timer {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  font-weight: 700;
+  color: var(--white-1);
+  text-shadow: 0px 0px 12px rgba(235, 15, 60, 0.9);
+}
+.league-timer .num {
+  font-size: 22px;
+  color: #ffffff;
+}
+.league-timer .unit {
+  font-size: 15px;
+  font-weight: 600;
+  margin-right: 4px;
+  color: var(--grey-1);
+}
+
+/* ==========================================================================
+   4. 区块标题件 (_titleBox)
+   ========================================================================== */
+.title-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--dark-5);
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+}
+.title-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.title-accent-square {
+  width: 10px;
+  height: 10px;
+  background-color: var(--accent-main);
+  border-radius: 2px;
+}
+.title-text {
+  font-size: 17px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--white-1);
+}
+.pager-arrows {
+  display: flex;
+  gap: 12px;
+  color: var(--grey-2);
+  cursor: pointer;
+}
+.pager-arrows svg:hover {
+  color: var(--white-1);
+}
+
+/* ==========================================================================
+   5. GAMING 核心网格布局 (56% + 44% 2x2)
+   ========================================================================== */
+.gaming-section {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+@media (max-width: 1024px) {
+  .gaming-section { flex-direction: column; }
+}
+
+.post-card {
+  position: relative;
+  background-color: var(--dark-5);
+  border: 1px solid var(--dark-5);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: inset 0 0 1px var(--dark-5);
+  display: flex;
+  flex-direction: column;
+}
+
+.post-card .img-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 16px;
+}
+.post-card .img-bg {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.2s ease-in-out;
+}
+.post-card:hover .img-bg {
+  transform: scale(1.03);
+}
+
+.post-card .shadow-overlay {
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 20px #000;
+  background: linear-gradient(180deg, transparent 40%, rgba(0, 0, 0, 0.95) 90%);
+}
+
+.post-card .content-overlay {
+  position: relative;
+  z-index: 10;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.post-card .card-title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--white-1);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-card .card-meta {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--grey-1);
+}
+.post-card .card-meta span {
+  color: var(--white-1);
+  font-weight: 500;
+}
+
+.gaming-feature-card {
+  flex: 0 0 56%;
+  height: 440px;
+}
+.gaming-feature-card .card-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.gaming-grid-right {
+  flex: 0 0 44%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 16px;
+  height: 440px;
+}
+@media (max-width: 640px) {
+  .gaming-grid-right {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+}
+
+/* ==========================================================================
+   6. LATEST NEWS 新闻列表 + 300px 侧边栏
+   ========================================================================== */
+.news-layout {
+  display: flex;
+  gap: 24px;
+}
+@media (max-width: 1024px) {
+  .news-layout { flex-direction: column; }
+}
+
+.news-feed {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.news-post-item {
+  display: flex;
+  background-color: transparent;
+  border: 1px solid var(--dark-5);
+  border-radius: 16px;
+  overflow: hidden;
+  min-height: 160px;
+  transition: var(--hover-transition);
+  cursor: pointer;
+}
+.news-post-item:hover {
+  background-color: var(--dark-5);
+  border-color: var(--grey-3);
+}
+
+.news-thumb {
+  width: 260px;
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+.news-thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 15px #000;
+}
+
+/* 移动小屏：新闻卡片纵向堆叠（thumb 固定 260px 曾撑爆视口，实测卡片 right=516px 被裁切） */
+@media (max-width: 768px) {
+  .news-post-item {
+    flex-direction: column;
+  }
+  .news-thumb {
+    width: 100%;
+    height: 180px;
+  }
+}
+
+.news-info {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
+}
+
+.news-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.news-category {
+  color: var(--accent-main);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.news-tags {
+  display: flex;
+  gap: 6px;
+}
+.badge-item {
+  background-color: var(--dark-2);
+  border: 1px solid rgba(92, 92, 92, 0.7);
+  border-radius: 6px;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--grey-1);
+}
+
+.news-heading {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--white-1);
+  margin-bottom: 6px;
+}
+
+.news-summary {
+  font-size: 13px;
+  color: var(--grey-1);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* 300px 粘性侧边栏 */
+.right-sidebar {
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 90px;
+  align-self: flex-start;
+}
+@media (max-width: 1024px) {
+  .right-sidebar { width: 100%; position: static; }
+}
+
+/* Share / Social 模块 */
+.social-card {
+  background-color: var(--dark-3);
+  border: 1px solid var(--dark-5);
+  border-radius: 12px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+}
+
+.social-card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white-1);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.social-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.social-btn {
+  width: 40px;
+  height: 40px;
+  background-color: var(--white-1);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dark-1);
+  cursor: pointer;
+  transition: var(--hover-transition);
+}
+.social-btn:hover {
+  transform: translateY(-2px);
+  background-color: var(--accent-hover);
+  color: white;
+}
+
+/* 嵌合在 Share 模块底部的 ROGUE WIKI 徽章 Logo */
+.roguewiki-embedded-shield {
+  width: 54px;
+  height: 54px;
+  background: var(--accent-main);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+}
+.roguewiki-embedded-shield-inner {
+  width: 48px;
+  height: 48px;
+  background: var(--dark-3);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--white-1);
+  font-size: 15px;
+  font-family: var(--font-oswald), sans-serif;
+  letter-spacing: -0.5px;
+}
+
+/* Quick Tools / Launchpad 模块 */
+.quick-tools-card {
+  background: var(--dark-3);
+  border: 1px solid var(--dark-5);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.quick-tools-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--white-1);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--dark-5);
+  padding-bottom: 8px;
+}
+.tool-item-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: var(--dark-4);
+  border: 1px solid var(--dark-5);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--white-2);
+  transition: var(--hover-transition);
+}
+.tool-item-btn:hover {
+  background: var(--dark-5);
+  border-color: var(--accent-main);
+  color: var(--white-1);
+}
+
+/* ── Guide 正文排版（MDX 内容，对齐雏形视觉：锐角/深色/紧凑）── */
+.guide-prose {
+  letter-spacing: 0.012em;
+  /* 长词/URL 强制换行（真机字体宽于 headless，实测 iPhone 上长链接撑出右屏被裁）
+     overflow-wrap 为标准属性，word-break 兼容旧 Safari */
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.guide-prose h2 {
+  @apply mt-10 mb-3 text-2xl font-bold tracking-tight text-white border-b border-[#1f1f23] pb-2 font-heading scroll-mt-24;
+}
+.guide-prose h3 {
+  @apply mt-8 mb-2 text-lg font-semibold text-white font-heading scroll-mt-24;
+}
+.guide-prose p {
+  @apply my-3 leading-loose;
+}
+.guide-prose ul {
+  @apply my-4 pl-6 text-base leading-relaxed;
+  list-style: disc;
+}
+.guide-prose ol {
+  @apply my-4 pl-6 text-base leading-relaxed;
+  list-style: decimal;
+}
+.guide-prose li {
+  @apply my-1.5 text-base leading-loose;
+}
+.guide-prose li::marker {
+  @apply text-zinc-500;
+}
+.guide-prose strong {
+  @apply font-semibold text-white;
+}
+.guide-prose a {
+  @apply text-[#e2b93f] hover:text-[#f0c94a] hover:underline underline-offset-4 transition-colors;
+}
+.guide-prose a {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.guide-prose blockquote {
+.guide-prose table {
+  @apply my-4 w-full border-collapse text-sm;
+}
+.guide-prose thead {
+  @apply bg-[#141417];
+}
+.guide-prose th {
+  @apply border border-[#1f1f23] px-3 py-2 text-left font-semibold text-white;
+}
+.guide-prose td {
+  @apply border border-[#1f1f23] px-3 py-2 align-top leading-relaxed text-zinc-300;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+.guide-prose tbody tr:nth-child(even) {
+  @apply bg-[#0c0c0e];
+}
+.guide-prose tbody tr:hover {
+  @apply bg-[#141417];
+}
+.guide-prose .table-wrapper {
+  @apply block overflow-x-auto;
+}
+  @apply my-4 rounded-none border-l-4 border-[#e2b93f] bg-[#0c0c0e] px-4 py-3 text-zinc-400;
+}
+.guide-prose code {
+  @apply rounded-none bg-[#141417] px-1.5 py-0.5 text-xs font-mono text-[#d3ad69];
+  overflow-wrap: anywhere;
+}
+.guide-prose pre {
+  @apply my-4 overflow-x-auto rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-4 text-xs font-mono;
+}
+.guide-prose pre code {
+  @apply bg-transparent p-0 text-zinc-300;
+}
+.guide-prose table {
+  @apply my-4 w-full border-collapse text-sm;
+}
+.guide-prose th {
+  @apply border border-[#1f1f23] bg-[#121215] px-3 py-2 text-left font-semibold text-white;
+}
+.guide-prose td {
+  @apply border border-[#1f1f23] px-3 py-2 align-top;
+}
+.guide-prose img {
+  @apply my-4 h-auto max-w-full rounded-none border border-[#1f1f23];
+}
+.guide-prose hr {
+  @apply my-6 border-[#1f1f23];
+}
+
+/* ── MDX 视觉组件 ── */
+
+/* Callout 醒目提示框（:::tip / :::warning / :::critical / :::note） */
+.guide-prose .callout {
+  @apply relative my-5 rounded-none border border-[#1f1f23] bg-[#0c0c0e] p-4 shadow-lg;
+}
+.guide-prose .callout-title {
+  @apply mb-2 text-xs font-bold uppercase tracking-wider font-heading;
+}
+.guide-prose .callout-body {
+  @apply text-sm leading-relaxed text-zinc-300;
+}
+.guide-prose .callout-tip { @apply border-l-4 border-l-[#7dcc8a]; }
+.guide-prose .callout-tip .callout-title { @apply text-[#9ee3b0]; }
+.guide-prose .callout-warning { @apply border-l-4 border-l-[#e2b93f]; }
+.guide-prose .callout-warning .callout-title { @apply text-[#e2b93f]; }
+.guide-prose .callout-note { @apply border-l-4 border-l-zinc-500; }
+.guide-prose .callout-note .callout-title { @apply text-zinc-400; }
+
+/* critical：复用雏形金色古董风 */
+.guide-prose .callout-critical {
+  @apply border border-[#7a6438]/70 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#1a140d] via-[#090806] to-[#040302] overflow-hidden;
+}
+.guide-prose .callout-critical .callout-title {
+  @apply text-center text-[#e8c87d] tracking-[0.12em] text-[11px] font-serif;
+}
+.guide-prose .callout-critical .callout-body {
+  @apply text-center text-[#d8d3c5] font-serif text-[13px];
+}
+
+/* Figure 图片：单行大图 / 文本环绕 */
+.guide-prose .figure-block {
+  @apply my-6 border border-[#1f1f23] bg-[#0c0c0e] p-2 text-center;
+}
+.guide-prose .figure-block img {
+  @apply w-full h-auto;
+}
+.guide-prose .figure-block figcaption {
+  @apply mt-2 text-center text-xs font-mono text-zinc-400;
+}
+.guide-prose .figure-wrap {
+  @apply my-3 border border-[#1f1f23] bg-[#0c0c0e] p-2 max-w-[45%];
+}
+.guide-prose .figure-wrap img {
+  @apply w-full h-auto;
+}
+.guide-prose .figure-wrap figcaption {
+  @apply mt-1 text-center text-[11px] font-mono text-zinc-500;
+}
+@media (min-width: 640px) {
+  .guide-prose .figure-wrap { @apply float-right ml-6; }
+}
+
+/* 正文目标标题跳转动效：小众香槟金 (#f5d78a / #e6be65) + 从左到右光波扫过 (Left-to-Right Shimmer Sweep) */
+@keyframes toc-flash-sweep-kf {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0.9;
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes toc-flash-bg-kf {
+  0% {
+    background-color: rgba(230, 190, 101, 0.28);
+    box-shadow: 0 0 16px rgba(230, 190, 101, 0.3), inset 4px 0 0 #f5d78a;
+    color: #ffffff;
+  }
+  40% {
+    background-color: rgba(230, 190, 101, 0.16);
+    box-shadow: 0 0 12px rgba(230, 190, 101, 0.2), inset 4px 0 0 #f5d78a;
+  }
+  100% {
+    background-color: transparent;
+    box-shadow: 0 0 0 0 rgba(230, 190, 101, 0);
+  }
+}
+
+.guide-prose .toc-flash {
+  position: relative;
+  overflow: hidden;
+  animation: toc-flash-bg-kf 2.2s ease-out forwards;
+  border-radius: 2px;
+  padding-left: 12px;
+  padding-right: 12px;
+  margin-left: -12px;
+  margin-right: -12px;
+  transition: all 0.2s ease;
+}
+
+/* 从左到右的发光扫过光波 (Left-to-Right Shimmer Sweep) */
+.guide-prose .toc-flash::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(245, 215, 138, 0.2) 20%,
+    rgba(255, 240, 185, 0.6) 50%,
+    rgba(245, 215, 138, 0.2) 80%,
+    transparent 100%
+  );
+  animation: toc-flash-sweep-kf 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+}
+
+/* TOC 高亮（scrollspy 命令式 classList 切换，不经过 React 状态——避免滚动重渲染重建正文 DOM、打断浏览器翻译）
+   等价于原 JSX 三元：border-[#f5d78a] bg-[#141417] text-white font-semibold；hover 保持高亮态 */
+a[data-toc-id].toc-active,
+a[data-toc-id].toc-active:hover {
+  border-left-color: #f5d78a;
+  background: #141417;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* TOC 锚点：heading 滚动定位避开 sticky header，且与 scrollspy 的 80px 锚区对齐 */
+#guide-content h2,
+#guide-content h3 {
+  scroll-margin-top: 96px;
+}

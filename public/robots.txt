@@ -1,0 +1,25 @@
+# RogueWiki robots.txt — AI 爬虫显式放行（GEO 策略）
+User-agent: *
+Allow: /
+
+# AI 爬虫：显式 Allow（用于训练与引用；当前阶段绝不拦截 AI 爬虫）
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+# 屏蔽筛选参数变体（无筛选页）
+Disallow: /*?
+Disallow: /_next/
+
+Sitemap: https://roguewiki.com/sitemap.xml
