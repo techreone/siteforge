@@ -93,4 +93,4 @@ node scripts/submit-indexnow.mjs                      # 上线后提交收录
 1. 静态导出模式：dev 与 build 行为差异——新增依赖服务端能力的库前先想清楚 export 兼容
 2. 字体本地化（public/fonts/）：别引 Google Fonts 外链——LCP 与 GDPR 双输
 3. 收录后 URL 永不改名；已有排名的页面禁止改 H1/H2/TDK 结构
-4. 广告位用 components/Adsterra*.tsx，别内联脚本
+4. 广告位配置集中在 `lib/ads.ts`（AdSense / Popunder / SocialBar / 728×90 / 160×600 / 300×250 / Native / 320×50，留空=不渲染），组件层用 `components/Adsterra*.tsx`，别内联脚本

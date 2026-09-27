@@ -6,6 +6,13 @@ import AdsterraBanner from '../components/AdsterraBanner'
 import LeftSidebar from '../components/LeftSidebar'
 import MainHeader from '../components/MainHeader'
 import { getCatalog, listTopics } from '../lib/data'
+import {
+  ADS,
+  ADSENSE_CLIENT,
+  ADSTERRA_POPUNDER_SRC,
+  ADSTERRA_SOCIALBAR_SRC,
+  ADSTERRA_STICKY_KEY,
+} from '../lib/ads'
 import { listPosts } from '../lib/posts'
 import { DEFAULT_OG_IMAGE, SITE_URL } from '../lib/seo'
 import { CONTACT_EMAIL, DEFAULT_TITLE, SITE_LOGO_ICON, SITE_NAME, SITE_TAGLINE } from '../lib/site-config'
@@ -73,10 +80,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`dark ${sourceSans3.variable} ${oswald.variable}`}>
       <head>
-        {/* Google AdSense (ca-pub-4279540531842674) */}
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4279540531842674" crossOrigin="anonymous" />
-        {/* Adsterra Popunder Ad (ID: 30727122) */}
-        <script async src="https://pl30827621.effectivecpmnetwork.com/c3/ef/81/c3ef814f619c0d00ce39cd5770fb6f38.js" />
+        {/* Google AdSense（发布商 ID 在 lib/ads.ts 配置；未配置则不加载） */}
+        {ADS.adsense && (
+          <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`} crossOrigin="anonymous" />
+        )}
+        {/* Adsterra Popunder（URL 在 lib/ads.ts 配置；本站无同意门控，直载） */}
+        {ADS.popunder && (
+          <script async src={ADSTERRA_POPUNDER_SRC} />
+        )}
       </head>
       <body className="flex min-h-screen flex-col bg-[var(--dark-1)] text-foreground font-sans antialiased pb-14 md:pb-0">
         {/* Permanent Expandable Left Navigation Sidebar */}
@@ -123,19 +134,23 @@ export default function RootLayout({
           />
         </div>
 
-        {/* Adsterra Mobile Sticky Bottom Banner 320x50 (ID: 30727131) */}
-        <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-center bg-[#0a0a0a]/95 border-t border-zinc-800/80 py-1 shadow-2xl backdrop-blur-md md:hidden">
-          <AdsterraBanner
-            idKey="a7513ad6cd7218ca2f3dfb789cf33ea4"
-            width={320}
-            height={50}
-            label=""
-            className="!my-0 !p-0 !border-0 !bg-transparent !shadow-none"
-          />
-        </div>
+        {/* Adsterra Mobile Sticky Bottom Banner 320x50（key 在 lib/ads.ts 配置；未配置不渲染） */}
+        {ADS.sticky && (
+          <div className="fixed bottom-0 left-0 right-0 z-50 flex items-center justify-center bg-[#0a0a0a]/95 border-t border-zinc-800/80 py-1 shadow-2xl backdrop-blur-md md:hidden">
+            <AdsterraBanner
+              idKey={ADSTERRA_STICKY_KEY}
+              width={320}
+              height={50}
+              label=""
+              className="!my-0 !p-0 !border-0 !bg-transparent !shadow-none"
+            />
+          </div>
+        )}
 
-        {/* Adsterra Social Bar Ad (ID: 30727124) */}
-        <script async src="https://pl30827623.effectivecpmnetwork.com/bb/99/32/bb99320097771b0677d9fa8794479c0c.js" />
+        {/* Adsterra Social Bar（URL 在 lib/ads.ts 配置；未配置不渲染） */}
+        {ADS.socialbar && (
+          <script async src={ADSTERRA_SOCIALBAR_SRC} />
+        )}
       </body>
     </html>
   )

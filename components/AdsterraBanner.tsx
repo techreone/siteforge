@@ -11,7 +11,8 @@ interface AdsterraBannerProps {
 }
 
 // Adsterra banner invoke host for this template family (from dashboard GET CODE).
-const INVOKE_HOST = 'https://www.highperformanceformat.com'
+// 2026-09-27 后台已全量轮换到 highrevenueformat.com（旧 highperformanceformat.com 仍可用但弃用）。
+const INVOKE_HOST = 'https://www.highrevenueformat.com'
 
 interface BannerJob {
   key: string

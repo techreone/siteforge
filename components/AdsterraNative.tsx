@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
+import { ADS, ADSTERRA_NATIVE_SRC, nativeContainerId } from '../lib/ads'
 
 interface AdsterraNativeProps {
   className?: string
@@ -14,11 +15,12 @@ export default function AdsterraNative({
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (!ADS.native) return
     const container = containerRef.current
     if (!container) return
     // 容器 ID 由 Adsterra 广告位绑定（invoke.js 按此 ID 定位），不能改
-    const containerId = 'container-e873068467612259b0fdb89a913a2a76'
-    const scriptSrc = 'https://pl30827622.effectivecpmnetwork.com/e873068467612259b0fdb89a913a2a76/invoke.js'
+    const containerId = nativeContainerId()
+    const scriptSrc = ADSTERRA_NATIVE_SRC
 
     // 幂等：脚本已加载则只复用容器，不重复注入（防 StrictMode 双调 / 多实例重复加载）
     if (!document.querySelector(`script[data-adsterra-native="${containerId}"]`)) {
@@ -36,6 +38,9 @@ export default function AdsterraNative({
       container.appendChild(script)
     }
   }, [])
+
+  // 未配置广告位 ID 时不渲染（不出空盒子、不加载坏脚本）
+  if (!ADS.native) return null
 
   return (
     <div className={`my-6 rounded-[var(--radius-item)] border border-[var(--dark-5)] bg-[var(--dark-2)] p-4 shadow-md ${className}`}>

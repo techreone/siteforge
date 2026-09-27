@@ -17,7 +17,10 @@ import {
   type HowToStep,
 } from '../lib/schema'
 import AdsterraBanner from './AdsterraBanner'
+import AdsterraHeaderAd from './AdsterraHeaderAd'
 import AdsterraNative from './AdsterraNative'
+import AdsterraSideAd from './AdsterraSideAd'
+import { ADS, ADSTERRA_INARTICLE_KEY } from '../lib/ads'
 
 
 // ── PostArticleView：真实攻略渲染（视觉照搬雏形，内容动态化）──
@@ -108,7 +111,7 @@ const InArticleAds = memo(function InArticleAds({ contentHtml }: { contentHtml: 
     return { parts: out, hasAds: adsInserted > 0 }
   }, [contentHtml])
 
-  if (!hasAds) {
+  if (!hasAds || !ADS.inarticle) {
     return (
       <div
         id="guide-content"
@@ -123,8 +126,8 @@ const InArticleAds = memo(function InArticleAds({ contentHtml }: { contentHtml: 
       {parts.map((part, i) => (
         <Fragment key={i}>
           <div dangerouslySetInnerHTML={{ __html: part.html }} />
-          {part.adAfter && (
-            <AdsterraBanner idKey="18c170d146cf3594deef4b20c1940e98" width={300} height={250} />
+          {part.adAfter && ADS.inarticle && (
+            <AdsterraBanner idKey={ADSTERRA_INARTICLE_KEY} width={300} height={250} />
           )}
         </Fragment>
       ))}
@@ -452,6 +455,11 @@ export default function PostArticleView({
                 <p className="text-xs text-zinc-500">No sections in this guide yet.</p>
               )}
             </div>
+
+            {/* 侧栏 160×600 摩天楼 — TOC 下方、sticky 跟随（Mistfall 8/18 位；仅桌面，未配置不渲染） */}
+            <div className="hidden lg:block shrink-0">
+              <AdsterraSideAd />
+            </div>
           </aside>
 
           {/* =========================================================================
@@ -494,13 +502,18 @@ export default function PostArticleView({
               </div>
             </div>
 
+            {/* 头部 728×90 leaderboard — 标题下方、正文之前（Mistfall 8/18 位；未配置不渲染） */}
+            <AdsterraHeaderAd />
+
             {/* Guide Content (MDX → HTML) —— memo 化：父级重渲染不重建正文 DOM（保护浏览器翻译） */}
             <InArticleAds contentHtml={contentHtml} />
 
-            {/* Adsterra In-Article Banner 300x250 (ID: 30727127) */}
-            <AdsterraBanner idKey="18c170d146cf3594deef4b20c1940e98" width={300} height={250} />
+            {/* Adsterra In-Article Banner 300x250（未配置不渲染） */}
+            {ADS.inarticle && (
+              <AdsterraBanner idKey={ADSTERRA_INARTICLE_KEY} width={300} height={250} />
+            )}
 
-            {/* Adsterra Native Banner (ID: 30727123) */}
+            {/* Adsterra Native Banner（未配置不渲染） */}
             <AdsterraNative />
 
             {/* Similar Guides 卡片（Canva 模式：同游戏环形互链，正文底部内链密度提升） */}

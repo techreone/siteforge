@@ -1,4 +1,4 @@
-# RogueWiki robots.txt — AI 爬虫显式放行（GEO 策略）
+# robots.txt — AI 爬虫显式放行（GEO 策略）；建站时把域名换成真实站点（check-placeholders 会拦）
 User-agent: *
 Allow: /
 
@@ -22,4 +22,4 @@ Allow: /
 Disallow: /*?
 Disallow: /_next/
 
-Sitemap: https://roguewiki.com/sitemap.xml
+Sitemap: https://PLACEHOLDER_DOMAIN.example/sitemap.xml
