@@ -94,7 +94,11 @@ const InArticleAds = memo(function InArticleAds({ contentHtml }: { contentHtml: 
     let lastAdP = 0
     let adsInserted = 0
     let inFaq = false
-    const out: { html: string; adAfter: boolean }[] = []
+    // 第 1 个穿插点（第 6 段后，文章前 1/5）插 Native Banner，其余为 300x250。
+    // Native CPM 远高于普通 banner（direct 实测 10+ 级），放最前 = 没读完的读者也能看到
+    // （2026-09-27 上线；native 未配置时该槽位自动降级为 300×250）。
+    const NATIVE_SLOT_INDEX = 1
+    const out: { html: string; adAfter: boolean; isNative: boolean }[] = []
     for (const b of merged) {
       if (!inFaq && /<h[1-4][^>]*id=["']faq/i.test(b)) inFaq = true
       const isHeading = /^<h[1-4]/.test(b)
@@ -106,12 +110,14 @@ const InArticleAds = memo(function InArticleAds({ contentHtml }: { contentHtml: 
         lastAdP = targetP
         adsInserted++
       }
-      out.push({ html: b, adAfter })
+      out.push({ html: b, adAfter, isNative: adAfter && adsInserted === NATIVE_SLOT_INDEX })
     }
     return { parts: out, hasAds: adsInserted > 0 }
   }, [contentHtml])
 
-  if (!hasAds || !ADS.inarticle) {
+  // 广告位未配置时直接渲染纯正文（不插空广告盒）
+  const adsLive = ADS.inarticle || ADS.native
+  if (!hasAds || !adsLive) {
     return (
       <div
         id="guide-content"
@@ -126,9 +132,12 @@ const InArticleAds = memo(function InArticleAds({ contentHtml }: { contentHtml: 
       {parts.map((part, i) => (
         <Fragment key={i}>
           <div dangerouslySetInnerHTML={{ __html: part.html }} />
-          {part.adAfter && ADS.inarticle && (
-            <AdsterraBanner idKey={ADSTERRA_INARTICLE_KEY} width={300} height={250} />
-          )}
+          {part.adAfter &&
+            (part.isNative && ADS.native ? (
+              <AdsterraNative />
+            ) : ADS.inarticle ? (
+              <AdsterraBanner idKey={ADSTERRA_INARTICLE_KEY} width={300} height={250} />
+            ) : null)}
         </Fragment>
       ))}
     </div>
@@ -508,13 +517,12 @@ export default function PostArticleView({
             {/* Guide Content (MDX → HTML) —— memo 化：父级重渲染不重建正文 DOM（保护浏览器翻译） */}
             <InArticleAds contentHtml={contentHtml} />
 
-            {/* Adsterra In-Article Banner 300x250（未配置不渲染） */}
+            {/* Adsterra In-Article Banner 300x250（未配置不渲染）。
+                Native 不放文末：单实例只在正文第 1 个穿插点（第 6 段后）渲染——
+                双实例会因幂等逻辑把容器从先挂载处移动到后挂载处（位置反向），故只留一处。 */}
             {ADS.inarticle && (
               <AdsterraBanner idKey={ADSTERRA_INARTICLE_KEY} width={300} height={250} />
             )}
-
-            {/* Adsterra Native Banner（未配置不渲染） */}
-            <AdsterraNative />
 
             {/* Similar Guides 卡片（Canva 模式：同游戏环形互链，正文底部内链密度提升） */}
             {related.length > 6 && (
