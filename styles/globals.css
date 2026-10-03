@@ -250,6 +250,36 @@ html {
 }
 .scrollbar-none::-webkit-scrollbar { display: none; width: 0; height: 0; }
 
+/* ── 第二轮（2026-10-04）：移动端横向溢出 + TOC/内容滚动条 ────────────
+   a) 文章页网格项缺 min-width:0：<1024px 时 lg:grid-cols-12 退化为单列隐式轨道，
+      轨道被文章内宽表格的 min-content 撑爆（实测 dress-maker.wiki 单页表格
+      min-content 748px → 整页 767px、横向溢出 327px，22 站全有含表格页）。
+      给网格项加 min-width:0 后，宽表格由 .table-wrapper 自身的
+      overflow-x:auto 接管（模板本来就有，只是从未有机会生效）。
+   b) .header-right 是普通规则，在产物里层叠在 Tailwind 工具类之后，把组件上
+      "hidden md:flex" 的 hidden 覆盖掉（实测 440px 视口下计算值仍是 flex）
+      → 右侧导航恒定溢出 12px，全部站中招。<768px 显式 display:none。
+   c) TOC 两处滚动容器（桌面 sticky 目录的 nav 与移动端 aside）此前没有任何
+      滚动条样式，Chrome 上是一条大白杠，与左栏同一处理：藏条不藏滚动；
+      文章内的 .table-wrapper 与 pre 同理（横向滚动照常，条不显示）。 */
+main [class*="lg:grid-cols-12"] > * { min-width: 0; }
+
+@media (max-width: 767px) {
+  .header-right { display: none; }
+}
+
+aside[class*="overflow-y-auto"],
+aside [class*="overflow-y-auto"],
+.guide-prose .table-wrapper,
+.guide-prose pre {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+aside[class*="overflow-y-auto"]::-webkit-scrollbar,
+aside [class*="overflow-y-auto"]::-webkit-scrollbar,
+.guide-prose .table-wrapper::-webkit-scrollbar,
+.guide-prose pre::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
 
 .game-icon-item {
   width: 44px;
