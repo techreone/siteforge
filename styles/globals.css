@@ -265,7 +265,7 @@ html {
 main [class*="lg:grid-cols-12"] > * { min-width: 0; }
 
 @media (max-width: 767px) {
-  .header-right { display: none; }
+  html body .header-right { display: none; }
 }
 
 aside[class*="overflow-y-auto"],
