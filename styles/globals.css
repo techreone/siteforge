@@ -227,6 +227,30 @@ html {
 }
 .game-nav-list::-webkit-scrollbar { display: none; }
 
+/* ── 滚动容器一律隐藏滚动条（2026-10-04，与 gamewiki-base 模板同步）─────
+   背景：Chrome/Chromium 在 Linux 默认画**常驻经典滚动条且占 13px 布局宽度**，
+   Firefox 跟随 KDE 用 overlay 滚动条（不占宽、不动时隐藏）——同一段 CSS 下
+   两者观感不同，左栏在 Chrome 里会多一条白杠。隐藏后两者观感一致，且不再吃宽度。
+   ⚠️ .guide-nav 才是真正的滚动容器（components/LeftSidebar.tsx 的 <nav>）；
+   .game-nav-list 是死类（DOM 零引用），旧规则挂错了名字所以从未生效。
+   ⚠️ overflow-y 一旦非 visible，CSS 会把 overflow-x 自动算成 auto：内容宽出 1px
+   就同时蹦出横向滚动条，必须显式写 overflow-x: hidden 掐死。
+   .scrollbar-none 此前只有 TopicSubHeader 在用、CSS 里没有定义（空操作），一并补上；
+   顶栏 tab 行仍要横向滚动，所以 .scrollbar-none 不设 overflow-x。 */
+.guide-nav {
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.guide-nav::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar { display: none; width: 0; height: 0; }
+
+
 .game-icon-item {
   width: 44px;
   height: 44px;
