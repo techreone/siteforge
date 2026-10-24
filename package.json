@@ -15,7 +15,8 @@
     "check:audit:strict": "python3 scripts/check-seo-audit.py --strict",
     "check:placeholders": "node scripts/check-placeholders.mjs",
     "og": "node scripts/generate-og-images.mjs",
-    "sync:theme": "node scripts/sync-theme.mjs"
+    "sync:theme": "node scripts/sync-theme.mjs",
+    "ads:setup": "node scripts/adsterra-setup.mjs"
   },
   "dependencies": {
     "autoprefixer": "^10.5.4",
