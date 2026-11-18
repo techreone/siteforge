@@ -9,7 +9,6 @@ import { getCatalog, listTopics } from '../lib/data'
 import {
   ADS,
   ADSENSE_CLIENT,
-  ADSTERRA_POPUNDER_SRC,
   ADSTERRA_SOCIALBAR_SRC,
   ADSTERRA_STICKY_KEY,
 } from '../lib/ads'
@@ -83,10 +82,6 @@ export default function RootLayout({
         {/* Google AdSense（发布商 ID 在 lib/ads.ts 配置；未配置则不加载） */}
         {ADS.adsense && (
           <script async src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`} crossOrigin="anonymous" />
-        )}
-        {/* Adsterra Popunder（URL 在 lib/ads.ts 配置；本站无同意门控，直载） */}
-        {ADS.popunder && (
-          <script async src={ADSTERRA_POPUNDER_SRC} />
         )}
       </head>
       <body className="flex min-h-screen flex-col bg-[var(--dark-1)] text-foreground font-sans antialiased pb-14 md:pb-0">

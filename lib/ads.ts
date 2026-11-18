@@ -12,9 +12,6 @@ export const ADSENSE_CLIENT = 'PLACEHOLDER_ADSENSE_CLIENT'
 /** Google Analytics 4 衡量 ID（每站独立，如 G-XXXXXXXXXX） */
 export const GA4_ID = 'PLACEHOLDER_GA4_ID'
 
-/** Adsterra Popunder 完整脚本 URL（_best_ 做法：整站 head 直载，无同意门控） */
-export const ADSTERRA_POPUNDER_SRC = 'PLACEHOLDER_ADSTERRA_POPUNDER_SRC'
-
 /** Adsterra Social Bar 完整脚本 URL */
 export const ADSTERRA_SOCIALBAR_SRC = 'PLACEHOLDER_ADSTERRA_SOCIALBAR_SRC'
 
@@ -37,7 +34,6 @@ export const ADSTERRA_SIDEBAR_160_KEY = 'PLACEHOLDER_ADSTERRA_SIDEBAR_160_KEY'
 export const ADS = {
   adsense: configured(ADSENSE_CLIENT),
   ga4: configured(GA4_ID),
-  popunder: configured(ADSTERRA_POPUNDER_SRC),
   socialbar: configured(ADSTERRA_SOCIALBAR_SRC),
   inarticle: configured(ADSTERRA_INARTICLE_KEY),
   native: configured(ADSTERRA_NATIVE_SRC),

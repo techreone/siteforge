@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Adsterra 一条龙：建站（等价面板 Add new Website）→ 取 10 个广告位代码 → 自动写进 lib/ads.ts。
+// Adsterra 一条龙：建站（等价面板 Add new Website）→ 取 9 个广告位代码（不含 Popunder） → 自动写进 lib/ads.ts。
 //
 // 用法（在新站仓库根目录跑）：
 //   node scripts/adsterra-setup.mjs                    # 域名取自 lib/site-config.ts 的 SITE_URL，直接建站+埋码
@@ -15,7 +15,7 @@
 //   GET  /api/placements/{id}/extended? 广告位 + codes[]（codes[].code 就是脚本原文）
 // 鉴权：X-Access-Token = 后台 JWT（tkn_3），**不是**公开 API 的 X-API-Key。
 //   取新 token：见 cf-deploy skill「凭据」段 / SECRETS.local.md。
-// 注意：服务端限流「每 1 分钟最多 5 个 ad unit」，所以 10 个位要分 2 批、中间等 62s。
+// 注意：服务端限流「每 1 分钟最多 5 个 ad unit」，所以 9 个位要分 2 批、中间等 62s。
 //       后台**没有删除站点的接口**，域名写错只能人工在面板删——--dry-run 先用非法域名探校验。
 
 import fs from 'node:fs'
@@ -32,22 +32,20 @@ const AD_UNITS = {
   25: '160x600',
   26: '160x300',
   27: '468x60',
-  28: 'Popunder',
   29: 'SocialBar',
   32: '320x50(sticky)',
   49: 'NativeBanner',
   10001: 'Smartlink',
 }
 
-// 舰队统一做法：10 个位全开、不接成人流量、category_id=3（与 47/48 个存量站一致）
-const FLEET_AD_UNITS = [5, 23, 25, 26, 27, 28, 29, 32, 49, 10001]
+// 舰队统一做法：9 个位全开（不含 Popunder）、不接成人流量、category_id=3（与 47/48 个存量站一致）
+const FLEET_AD_UNITS = [5, 23, 25, 26, 27, 29, 32, 49, 10001]
 const FLEET_CATEGORY_ID = 3
 const BATCH_SIZE = 5
 const BATCH_WAIT_S = 62
 
 // ad_unit → lib/ads.ts 常量（与底座 lib/ads.ts 的槽位一一对应）
 const SLOTS = {
-  28: { name: 'ADSTERRA_POPUNDER_SRC', how: 'src' },
   29: { name: 'ADSTERRA_SOCIALBAR_SRC', how: 'src' },
   49: { name: 'ADSTERRA_NATIVE_SRC', how: 'src' },
   5: { name: 'ADSTERRA_INARTICLE_KEY', how: 'key' },
